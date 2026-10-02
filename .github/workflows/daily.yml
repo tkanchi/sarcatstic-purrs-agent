@@ -112,8 +112,8 @@ jobs:
           git diff --cached --quiet || git commit -m "Publish Reel asset for campaign day ${{ steps.campaign.outputs.day }}"
           git push
 
-      - name: Wait until 5 PM IST
-        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+      - name: Wait until 5 PM IST (scheduled runs only)
+        if: steps.campaign.outputs.day != '0' && github.event_name == 'schedule'
         run: python src/wait_until_ist.py 17:00
 
       - name: Publish Reel to Instagram
