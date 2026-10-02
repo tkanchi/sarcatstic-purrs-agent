@@ -1,67 +1,62 @@
 # SARCATSTIC PURRS Agent
 
-Automated daily image-post pipeline for the Milo sarcasm channel.
+Automated daily Instagram **Reel** pipeline for Milo.
 
 ## Runtime design
 This version does **not** use the OpenAI API.
 
-The automation assembles each post from approved assets:
+Pipeline:
 
-`approved quote -> approved transparent Milo PNG -> locked background -> Patrick Hand quote -> exact footer -> caption -> Instagram publish`
+`approved quote -> approved Milo PNG -> locked 4:5 design -> 9:16 Reel -> embedded music -> caption -> Instagram Reel`
 
 No `OPENAI_API_KEY` is required.
 
-## Month 1
-- Target publish time: **5:00 PM Asia/Kolkata**
-- Canvas: **4:5**
-- Format: **one short relatable quote + Milo + exact footer**
+## Reel format
+- Final video: **1080 x 1920 (9:16)**
+- Duration: **8 seconds**
+- Video: H.264, 24 fps
+- Audio: AAC, 48 kHz, 128 kbps
+- Gentle visual zoom for motion
+- Music mixed at 20% with short fade-in/fade-out
+- Share Reel to feed: yes
+
+The branded 4:5 design is preserved inside the 9:16 Reel so the typography and Milo layout stay consistent.
+
+## Music library
+Put approved music in:
+
+`assets/music/`
+
+Recommended names:
+- `music_general_01.mp3`
+- `music_work_01.mp3`
+- `music_money_01.mp3`
+- `music_relationship_01.mp3`
+- `music_family_01.mp3`
+- `music_driving_01.mp3`
+
+Use only audio you are legally permitted to use.
 
 ## Approved Milo library
-Put approved transparent Milo cutouts in:
+Approved transparent Milo cutouts live under:
 
 `assets/milo_library/`
 
-PNG is preferred. The build script:
-1. uses a specific `illustration` filename from the content row when one is assigned;
-2. otherwise rotates deterministically through the approved Milo PNGs already in the library.
+with category folders such as `work/`, `money/`, `relationship/`, `family/`, `driving/`, and `general/`.
 
-This keeps Milo consistent and avoids generating a new character every day.
-
-## Required GitHub secrets for publishing
-Only the Instagram/Meta publishing credentials are required:
-
+## Required GitHub secrets
 - `IG_USER_ID`
 - `META_ACCESS_TOKEN`
 
-They are **not needed for a preview build**.
-
 ## Safety switch
-Scheduled publishing stays disabled until this repository variable is explicitly set:
+Scheduled publishing remains disabled until:
 
-- `AUTO_PUBLISH_ENABLED=true`
+`AUTO_PUBLISH_ENABLED=true`
 
-Until then, manually run the workflow with `publish=false` to preview safely.
+Until then, run the workflow manually with `publish=false`.
 
 ## Schedule
-The workflow starts at **11:15 UTC / 4:45 PM IST** and waits until **5:00 PM IST** before publishing. GitHub scheduled workflows can start late, so 5 PM is the target rather than a hard real-time guarantee.
+Target publish time: **5:00 PM Asia/Kolkata**.
 
-## Manual preview
-Open:
-
-**Actions -> Daily SARCATSTIC PURRS Post -> Run workflow**
-
-Choose a campaign day and leave **publish** unchecked.
-
-## Locked brand rules
-See `BRAND_CONTRACT.md`.
-
-The runtime keeps:
-- Patrick Hand Regular
-- black regular quote text
-- exact footer treatment
-- four locked background families
-- 4:5 composition
-- approved Milo assets only
-
-## Important
-The repository must remain public for the current Meta publishing method because Instagram needs a public URL to fetch the final image.
+## Brand
+See `BRAND_CONTRACT.md` for the locked palette, Patrick Hand typography, Milo rules and footer.
