@@ -22,11 +22,23 @@ Exact signature: **SARCATSTIC 🐾**
 - no extra line
 - no extra footer copy
 
-## Background families
-- A — Warm Cream: default
-- B — Dusty Sage: calm/dry sarcasm
-- C — Muted Blue: work/social sarcasm
-- D — Soft Blush/Peach: relationships/everyday jokes
+## Background families — exact locked palette
+- **A — Warm Cream: #F7F1E8**
+  - default / general Milo sarcasm
+  - use most often
+- **B — Dusty Sage: #C9D2C0**
+  - dry humor, lazy moods, deadpan jokes
+- **C — Muted Blue: #BDD6E7**
+  - work, people, social-life sarcasm
+- **D — Soft Blush / Peach: #F3CEC5**
+  - relationships, dating, softer personal jokes
+
+### Background treatment rules
+- flat color or extremely subtle treatment only
+- no strong gradients
+- no busy background treatment
+- Milo and black Patrick Hand Regular quote text must remain dominant
+- Warm Cream is the default so the other three colors feel intentional when used
 
 ## Composition
 - 4:5
