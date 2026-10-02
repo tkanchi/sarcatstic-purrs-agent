@@ -7,7 +7,7 @@ This version does **not** use the OpenAI API.
 
 Pipeline:
 
-`approved quote -> approved Milo PNG -> locked 4:5 design -> 9:16 Reel -> rights-cleared music -> category-specific caption -> Instagram Reel`
+`approved quote -> approved Milo PNG -> native 9:16 design -> rights-cleared music -> category-specific caption -> Instagram Reel`
 
 ## Reel format
 - Final video: **1080 x 1920 (9:16)**
@@ -64,4 +64,4 @@ Until then, run the workflow manually with `publish=false`.
 Target publish time: **5:00 PM Asia/Kolkata**.
 
 ## Brand
-See `BRAND_CONTRACT.md` for the locked palette, Patrick Hand typography, Milo rules and footer.
+See `BRAND_CONTRACT.md` for the locked palette, native 9:16 layout, Patrick Hand typography, Milo rules and @sarcatsticmilo footer.
