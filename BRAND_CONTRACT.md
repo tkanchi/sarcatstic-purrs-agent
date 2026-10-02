@@ -30,14 +30,15 @@ Exact signature: **SARCATSTIC 🐾**
 - Color: **black**
 - Position: **bottom center**
 - Weight: **regular only — never bold**
-- Style: **small, clean, understated**
+- Style: **small, understated, visually secondary**
 - Spacing: generous breathing room from Milo and the main quote
 - No tagline
 - No @handle
 - No extra lines
 - No decorative text
-- Footer must remain visually secondary; the quote and Milo always dominate
-- Quote font and footer font are separate systems: Patrick Hand is for the quote, not the footer
+- The quote and Milo must always dominate
+- **Exact footer font is not yet locked**
+- **Exact numeric footer size is not yet locked**
 
 ## Background families — exact locked palette
 - **A — Warm Cream: #F7F1E8**
