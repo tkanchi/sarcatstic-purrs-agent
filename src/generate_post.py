@@ -10,9 +10,6 @@ from brand import (
     BACKGROUND_COLORS,
     CANVAS,
     FOOTER_COLOR,
-    FOOTER_RENDER_TOTAL_WIDTH_RATIO,
-    FOOTER_RENDER_BOTTOM_MARGIN_RATIO,
-    FOOTER_RENDER_TRACKING_RATIO,
     QUOTE_COLOR,
     QUOTE_FONT_MAX,
     QUOTE_FONT_MIN,
@@ -20,6 +17,9 @@ from brand import (
     QUOTE_MAX_HEIGHT,
     QUOTE_MAX_WIDTH,
     QUOTE_TOP,
+    FOOTER_FONT_SIZE,
+    FOOTER_TEXT,
+    FOOTER_Y,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -88,79 +88,6 @@ def ensure_font():
     if not FONT_CACHE.exists():
         urllib.request.urlretrieve(FONT_URL, FONT_CACHE)
     return FONT_CACHE
-
-
-def ensure_footer_font():
-    override = os.getenv("FOOTER_FONT_PATH", "").strip()
-    if override:
-        path = Path(override)
-        if not path.exists():
-            raise FileNotFoundError(path)
-        return path
-
-    FOOTER_FONT_CACHE.parent.mkdir(parents=True, exist_ok=True)
-    if not FOOTER_FONT_CACHE.exists():
-        urllib.request.urlretrieve(FOOTER_FONT_URL, FOOTER_FONT_CACHE)
-    return FOOTER_FONT_CACHE
-
-
-def tracked_text_width(draw, text, font, tracking):
-    widths = [
-        draw.textbbox((0, 0), char, font=font)[2]
-        for char in text
-    ]
-    return sum(widths) + tracking * max(0, len(text) - 1)
-
-
-def draw_tracked_text(draw, x, y, text, font, fill, tracking):
-    cursor = x
-    for char in text:
-        draw.text((cursor, y), char, font=font, fill=fill)
-        cursor += draw.textbbox((0, 0), char, font=font)[2] + tracking
-
-
-def fit_footer_preview(draw, font_path, text):
-    """Match the approved footer reference proportionally; no px size is brand-locked."""
-    target_total_width = CANVAS[0] * FOOTER_RENDER_TOTAL_WIDTH_RATIO
-    best = None
-
-    for size in range(18, 43):
-        font = ImageFont.truetype(str(font_path), size=size)
-
-        # Montserrat is downloaded as a variable font. Pillow can otherwise
-        # render its default instance much lighter than a true Regular face,
-        # which makes the footer look thin/grey after Reel scaling.
-        # Force the weight axis to 400 so the locked "regular, never bold"
-        # footer renders consistently.
-        try:
-            axes = font.get_variation_axes()
-            if axes:
-                values = []
-                for axis in axes:
-                    name = axis.get("name", b"")
-                    if isinstance(name, bytes):
-                        name = name.decode("utf-8", errors="ignore")
-                    if str(name).lower() == "weight":
-                        values.append(400)
-                    else:
-                        values.append(axis.get("default", axis.get("minimum", 0)))
-                font.set_variation_by_axes(values)
-        except (AttributeError, OSError, TypeError, ValueError):
-            pass
-
-        tracking = max(1, round(size * FOOTER_RENDER_TRACKING_RATIO))
-        text_width = tracked_text_width(draw, text, font, tracking)
-        paw_scale = max(0.8, size / 20)
-        paw_width = 20 * paw_scale
-        gap = max(6, round(size * 0.30))
-        total_width = text_width + gap + paw_width
-        delta = abs(total_width - target_total_width)
-        candidate = (delta, font, tracking, paw_scale, gap, text_width, paw_width)
-        if best is None or delta < best[0]:
-            best = candidate
-
-    _, font, tracking, paw_scale, gap, text_width, paw_width = best
-    return font, tracking, paw_scale, gap, text_width, paw_width
 
 
 def normalize_category(value):
@@ -287,7 +214,7 @@ def resize_milo(asset):
     if bbox:
         milo = milo.crop(bbox)
 
-    max_w, max_h = 760, 650
+    max_w, max_h = 800, 720
     scale = min(max_w / milo.width, max_h / milo.height, 1.0)
     size = (max(1, int(milo.width * scale)), max(1, int(milo.height * scale)))
     return milo.resize(size, Image.Resampling.LANCZOS)
@@ -324,12 +251,13 @@ def build_post(post, day, output_path):
     milo = resize_milo(asset)
 
     mx = (CANVAS[0] - milo.width) // 2
-    my = min(1120 - milo.height, max(460, 1180 - milo.height))
+    milo_bottom = 1490
+    my = max(650, milo_bottom - milo.height)
 
     shadow_w = int(milo.width * 0.62)
     shadow_h = 26
     shadow_x = CANVAS[0] // 2
-    shadow_y = min(1160, my + milo.height - 8)
+    shadow_y = min(1500, my + milo.height - 8)
     draw.ellipse(
         (
             shadow_x - shadow_w // 2,
@@ -342,39 +270,12 @@ def build_post(post, day, output_path):
 
     image.alpha_composite(milo, (mx, my))
 
-    # Footer preview matched to the approved reference:
-    # small, clean, centered and visually secondary. Exact px size remains unlocked.
-    footer_font_path = ensure_footer_font()
-    footer_word = "SARCATSTIC"
-    (
-        footer_font,
-        footer_tracking,
-        paw_scale,
-        paw_gap,
-        footer_width,
-        paw_width,
-    ) = fit_footer_preview(draw, footer_font_path, footer_word)
-
-    total_width = footer_width + paw_gap + paw_width
-    fx = (CANVAS[0] - total_width) // 2
-
-    footer_box = draw.textbbox((0, 0), footer_word, font=footer_font)
-    footer_height = footer_box[3] - footer_box[1]
-    bottom_margin = round(CANVAS[1] * FOOTER_RENDER_BOTTOM_MARGIN_RATIO)
-    fy = CANVAS[1] - bottom_margin - footer_height
-
-    draw_tracked_text(
-        draw,
-        fx,
-        fy,
-        footer_word,
-        footer_font,
-        FOOTER_COLOR,
-        footer_tracking,
-    )
-    paw_x = fx + footer_width + paw_gap + paw_width / 2
-    paw_y = fy + footer_height / 2 + max(2, round(footer_height * 0.12))
-    draw_paw(draw, paw_x, paw_y, scale=paw_scale)
+    # Locked handle footer: simple, black, centered, no paw mark.
+    footer_font = ImageFont.truetype(str(font_path), size=FOOTER_FONT_SIZE)
+    footer_box = draw.textbbox((0, 0), FOOTER_TEXT, font=footer_font)
+    footer_width = footer_box[2] - footer_box[0]
+    fx = (CANVAS[0] - footer_width) // 2
+    draw.text((fx, FOOTER_Y), FOOTER_TEXT, font=footer_font, fill=FOOTER_COLOR)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     image.convert("RGB").save(output_path, "PNG", optimize=True)
