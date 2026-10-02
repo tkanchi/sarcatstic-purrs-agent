@@ -220,17 +220,10 @@ def select_music(post, day):
 
 
 def make_reel_frame(source_path, post, output_path):
-    bg = BACKGROUND_COLORS[post["background"]]
     source = Image.open(source_path).convert("RGB")
-
-    target_width = REEL_SIZE[0]
-    target_height = round(target_width * 5 / 4)
-    source = source.resize((target_width, target_height), Image.Resampling.LANCZOS)
-
-    frame = Image.new("RGB", REEL_SIZE, bg)
-    y = (REEL_SIZE[1] - target_height) // 2
-    frame.paste(source, (0, y))
-    frame.save(output_path, "PNG", optimize=True)
+    if source.size != REEL_SIZE:
+        source = source.resize(REEL_SIZE, Image.Resampling.LANCZOS)
+    source.save(output_path, "PNG", optimize=True)
 
 
 def build_reel(day):
