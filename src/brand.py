@@ -3,6 +3,14 @@ FOOTER_TEXT = "SARCATSTIC 🐾"
 QUOTE_COLOR = (0, 0, 0)
 FOOTER_COLOR = (0, 0, 0)
 
+# Locked footer treatment.
+FOOTER_FONT_NAME = "Montserrat Regular"
+FOOTER_FONT_SIZE = 24
+FOOTER_TRACKING = 6
+FOOTER_PAW_GAP = 13
+FOOTER_BOTTOM_MARGIN = 42
+FOOTER_PAW_SCALE = 0.95
+
 # Locked quote typography/layout based on the approved reference image.
 QUOTE_FONT_NAME = "Patrick Hand Regular"
 QUOTE_TOP = 135
