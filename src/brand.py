@@ -1,23 +1,21 @@
-CANVAS = (1024, 1280)
-FOOTER_TEXT = "SARCATSTIC 🐾"
+CANVAS = (1080, 1920)
+FOOTER_TEXT = "@sarcatsticmilo"
 QUOTE_COLOR = (0, 0, 0)
 FOOTER_COLOR = (0, 0, 0)
 
-# Footer brand rules lock the text/color/placement/weight/style, but not an exact
-# typeface or pixel size yet. Preview rendering is matched proportionally to the
-# approved visual reference instead of treating a particular px size as a brand rule.
-FOOTER_RENDER_FONT_NAME = "Montserrat Regular"
-FOOTER_RENDER_TOTAL_WIDTH_RATIO = 0.273
-FOOTER_RENDER_BOTTOM_MARGIN_RATIO = 0.036
-FOOTER_RENDER_TRACKING_RATIO = 0.18
+# Locked 9:16 SARCATSTIC PURRS master.
+# Footer now uses the Instagram handle directly so it remains clear and readable.
+FOOTER_FONT_NAME = "Patrick Hand Regular"
+FOOTER_FONT_SIZE = 42
+FOOTER_Y = 1615
 
-# Locked quote typography/layout based on the approved reference image.
+# Locked quote typography/layout for the 1080x1920 master.
 QUOTE_FONT_NAME = "Patrick Hand Regular"
-QUOTE_TOP = 135
-QUOTE_MAX_WIDTH = 760
-QUOTE_MAX_HEIGHT = 330
-QUOTE_FONT_MAX = 70
-QUOTE_FONT_MIN = 50
+QUOTE_TOP = 320
+QUOTE_MAX_WIDTH = 820
+QUOTE_MAX_HEIGHT = 360
+QUOTE_FONT_MAX = 74
+QUOTE_FONT_MIN = 52
 QUOTE_LINE_SPACING = 12
 QUOTE_ALIGNMENT = "center"
 
