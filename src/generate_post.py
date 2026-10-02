@@ -6,7 +6,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from brand import BACKGROUND_COLORS, CANVAS, FOOTER_COLOR, QUOTE_COLOR
+from brand import (\n    BACKGROUND_COLORS, CANVAS, FOOTER_COLOR, QUOTE_COLOR,\n    QUOTE_FONT_MAX, QUOTE_FONT_MIN, QUOTE_LINE_SPACING,\n    QUOTE_MAX_HEIGHT, QUOTE_MAX_WIDTH, QUOTE_TOP,\n)
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_FILE = ROOT / "content" / "month_01.json"
@@ -168,16 +168,16 @@ def wrap_text(draw, text, font, max_width):
 
 
 def fit_font(draw, text, font_path, max_width, max_height):
-    for size in range(76, 43, -2):
+    for size in range(QUOTE_FONT_MAX, QUOTE_FONT_MIN - 1, -2):
         font = ImageFont.truetype(str(font_path), size=size)
         lines = wrap_text(draw, text, font, max_width)
-        spacing = max(8, size // 7)
+        spacing = QUOTE_LINE_SPACING
         boxes = [draw.textbbox((0, 0), line, font=font) for line in lines]
         height = sum(box[3] - box[1] for box in boxes) + spacing * (len(lines) - 1)
         if height <= max_height:
             return font, lines, spacing
-    font = ImageFont.truetype(str(font_path), size=44)
-    return font, wrap_text(draw, text, font, max_width), 8
+    font = ImageFont.truetype(str(font_path), size=QUOTE_FONT_MIN)
+    return font, wrap_text(draw, text, font, max_width), QUOTE_LINE_SPACING
 
 
 def draw_paw(draw, x, y, scale=1.0):
@@ -210,21 +210,21 @@ def build_post(post, day, output_path):
     draw = ImageDraw.Draw(image)
     font_path = ensure_font()
 
-    margin = 84
     quote_font, lines, spacing = fit_font(
         draw,
         post["quote"],
         font_path,
-        CANVAS[0] - (2 * margin),
-        340,
+        QUOTE_MAX_WIDTH,
+        QUOTE_MAX_HEIGHT,
     )
 
-    y = 72
+    # Approved reference: centered Patrick Hand quote block in the upper third.
+    y = QUOTE_TOP
     for line in lines:
         box = draw.textbbox((0, 0), line, font=quote_font)
         width = box[2] - box[0]
         height = box[3] - box[1]
-        x = margin if post["quote_position"] == "upper_left" else (CANVAS[0] - width) // 2
+        x = (CANVAS[0] - width) // 2
         draw.text((x, y), line, font=quote_font, fill=QUOTE_COLOR)
         y += height + spacing
 
