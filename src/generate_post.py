@@ -10,7 +10,7 @@ from brand import (
     BACKGROUND_COLORS,
     CANVAS,
     FOOTER_COLOR,
-    FOOTER_FONT_SIZE,
+    FOOTER_RENDER_FONT_SIZE,
     FOOTER_TRACKING,
     FOOTER_PAW_GAP,
     FOOTER_BOTTOM_MARGIN,
@@ -302,7 +302,7 @@ def build_post(post, day, output_path):
 
     # Locked footer: small, clean, understated "SARCATSTIC 🐾".
     footer_font_path = ensure_footer_font()
-    footer_font = ImageFont.truetype(str(footer_font_path), size=FOOTER_FONT_SIZE)
+    footer_font = ImageFont.truetype(str(footer_font_path), size=FOOTER_RENDER_FONT_SIZE)
     footer_word = "SARCATSTIC"
     footer_width = tracked_text_width(draw, footer_word, footer_font, FOOTER_TRACKING)
     paw_width = int(20 * FOOTER_PAW_SCALE)
