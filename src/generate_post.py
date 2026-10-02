@@ -126,6 +126,28 @@ def fit_footer_preview(draw, font_path, text):
 
     for size in range(18, 43):
         font = ImageFont.truetype(str(font_path), size=size)
+
+        # Montserrat is downloaded as a variable font. Pillow can otherwise
+        # render its default instance much lighter than a true Regular face,
+        # which makes the footer look thin/grey after Reel scaling.
+        # Force the weight axis to 400 so the locked "regular, never bold"
+        # footer renders consistently.
+        try:
+            axes = font.get_variation_axes()
+            if axes:
+                values = []
+                for axis in axes:
+                    name = axis.get("name", b"")
+                    if isinstance(name, bytes):
+                        name = name.decode("utf-8", errors="ignore")
+                    if str(name).lower() == "weight":
+                        values.append(400)
+                    else:
+                        values.append(axis.get("default", axis.get("minimum", 0)))
+                font.set_variation_by_axes(values)
+        except (AttributeError, OSError, TypeError, ValueError):
+            pass
+
         tracking = max(1, round(size * FOOTER_RENDER_TRACKING_RATIO))
         text_width = tracked_text_width(draw, text, font, tracking)
         paw_scale = max(0.8, size / 20)
