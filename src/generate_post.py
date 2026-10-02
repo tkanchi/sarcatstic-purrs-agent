@@ -1,25 +1,28 @@
 import argparse
-import base64
 import json
 import os
 import urllib.request
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageFont
 
-from brand import BACKGROUND_LABELS, CANVAS, FOOTER_COLOR, MILO_TRAITS, QUOTE_COLOR
+from brand import CANVAS, FOOTER_COLOR, QUOTE_COLOR
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_FILE = ROOT / "content" / "month_01.json"
-COLLAGE = ROOT / "assets" / "milo_collage.jpg"
-PROFILE = ROOT / "assets" / "milo_profile.jpg"
+MILO_LIBRARY = ROOT / "assets" / "milo_library"
 FONT_CACHE = ROOT / ".cache" / "PatrickHand-Regular.ttf"
 FONT_URL = os.getenv(
     "PATRICK_HAND_FONT_URL",
     "https://raw.githubusercontent.com/google/fonts/main/ofl/patrickhand/PatrickHand-Regular.ttf",
 )
-MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-2.5-sunburst")
-QUALITY = os.getenv("OPENAI_IMAGE_QUALITY", "medium")
+
+BACKGROUND_COLORS = {
+    "warm_cream": (249, 244, 232),
+    "dusty_sage": (220, 227, 213),
+    "muted_blue": (218, 228, 237),
+    "soft_blush": (247, 226, 220),
+}
 
 def load_post(day):
     rows = json.loads(CONTENT_FILE.read_text(encoding="utf-8"))
@@ -38,56 +41,42 @@ def ensure_font():
         urllib.request.urlretrieve(FONT_URL, FONT_CACHE)
     return FONT_CACHE
 
-def build_visual_prompt(post):
-    background = BACKGROUND_LABELS[post["background"]]
-    prop = post.get("prop", "none")
-    return f"""
-Create one clean minimal portrait Instagram illustration using the two supplied Milo reference images.
-The FIRST image is the primary source of truth for Milo's identity and appearance.
-The SECOND image is supplementary. Draw ONE Milo only. Do not reproduce the collage.
+def approved_milo_files():
+    if not MILO_LIBRARY.exists():
+        return []
+    return sorted(
+        path for path in MILO_LIBRARY.iterdir()
+        if path.is_file() and path.suffix.lower() == ".png"
+    )
 
-Milo must remain consistent: {MILO_TRAITS}.
-Expression: {post['expression']}.
-Background: {background}; matte, quiet, warm, minimal and uncluttered.
-Supporting object: {prop}. Never use more than 1-2 simple supporting objects.
-Composition: Milo occupies the lower half, slightly off-center, with a subtle grounding shadow.
-Keep the upper 35-40 percent spacious and visually quiet for text that will be added later.
-Do NOT generate text, letters, captions, logos, watermarks, speech bubbles or footer copy.
-Avoid busy interiors, detailed scenery, saturated colors, dramatic lighting and poster-style layouts.
-Preserve Milo's face, gray-and-white markings, amber eyes, gold right-ear hoop, yellow collar and paw-print tag.
-""".strip()
+def select_milo_asset(post, day):
+    assigned = str(post.get("illustration", "")).strip()
+    if assigned:
+        path = MILO_LIBRARY / assigned
+        if not path.exists():
+            raise FileNotFoundError(
+                f"Assigned Milo illustration is missing: {path}. "
+                "Upload the approved transparent PNG before running this post."
+            )
+        return path
 
-def generate_art(post, output_path):
-    if not os.getenv("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY is required for image generation")
-    if not COLLAGE.exists() or not PROFILE.exists():
-        raise FileNotFoundError("Milo reference images are missing from assets/")
-
-    from openai import OpenAI
-    client = OpenAI()
-
-    with open(COLLAGE, "rb") as primary, open(PROFILE, "rb") as secondary:
-        result = client.images.edit(
-            model=MODEL,
-            image=[primary, secondary],
-            prompt=build_visual_prompt(post),
-            size="1024x1536",
-            quality=QUALITY,
-            output_format="png",
+    files = approved_milo_files()
+    if not files:
+        raise FileNotFoundError(
+            "No approved Milo PNGs found in assets/milo_library/. "
+            "Upload at least one transparent Milo cutout."
         )
 
-    encoded = result.data[0].b64_json
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_bytes(base64.b64decode(encoded))
+    return files[(day - 1) % len(files)]
 
 def wrap_text(draw, text, font, max_width):
     words = text.split()
     lines = []
     current = ""
     for word in words:
-        test = word if not current else current + " " + word
-        if draw.textbbox((0, 0), test, font=font)[2] <= max_width:
-            current = test
+        candidate = word if not current else current + " " + word
+        if draw.textbbox((0, 0), candidate, font=font)[2] <= max_width:
+            current = candidate
         else:
             if current:
                 lines.append(current)
@@ -116,11 +105,25 @@ def draw_paw(draw, x, y, scale=1.0):
         cx, cy = x + int(ox * scale), y + int(oy * scale)
         draw.ellipse((cx-toe, cy-toe, cx+toe, cy+toe), fill=FOOTER_COLOR)
 
-def overlay_brand(art_path, post, output_path):
-    font_path = ensure_font()
-    source = Image.open(art_path).convert("RGB")
-    image = ImageOps.fit(source, CANVAS, method=Image.Resampling.LANCZOS, centering=(0.5, 0.56))
+def resize_milo(asset):
+    milo = Image.open(asset).convert("RGBA")
+    bbox = milo.getbbox()
+    if bbox:
+        milo = milo.crop(bbox)
+
+    max_w, max_h = 760, 650
+    scale = min(max_w / milo.width, max_h / milo.height, 1.0)
+    size = (max(1, int(milo.width * scale)), max(1, int(milo.height * scale)))
+    return milo.resize(size, Image.Resampling.LANCZOS)
+
+def build_post(post, day, output_path):
+    bg = BACKGROUND_COLORS.get(post["background"])
+    if bg is None:
+        raise ValueError(f"Unknown background family: {post['background']}")
+
+    image = Image.new("RGBA", CANVAS, bg + (255,))
     draw = ImageDraw.Draw(image)
+    font_path = ensure_font()
 
     margin = 84
     quote_font, lines, spacing = fit_font(
@@ -128,10 +131,10 @@ def overlay_brand(art_path, post, output_path):
         post["quote"],
         font_path,
         CANVAS[0] - (2 * margin),
-        350,
+        340,
     )
 
-    y = 76
+    y = 72
     for line in lines:
         box = draw.textbbox((0, 0), line, font=quote_font)
         width = box[2] - box[0]
@@ -139,6 +142,28 @@ def overlay_brand(art_path, post, output_path):
         x = margin if post["quote_position"] == "upper_left" else (CANVAS[0] - width) // 2
         draw.text((x, y), line, font=quote_font, fill=QUOTE_COLOR)
         y += height + spacing
+
+    asset = select_milo_asset(post, day)
+    milo = resize_milo(asset)
+
+    mx = (CANVAS[0] - milo.width) // 2
+    my = min(1120 - milo.height, max(460, 1180 - milo.height))
+
+    shadow_w = int(milo.width * 0.62)
+    shadow_h = 26
+    shadow_x = CANVAS[0] // 2
+    shadow_y = min(1160, my + milo.height - 8)
+    draw.ellipse(
+        (
+            shadow_x - shadow_w // 2,
+            shadow_y - shadow_h // 2,
+            shadow_x + shadow_w // 2,
+            shadow_y + shadow_h // 2,
+        ),
+        fill=(0, 0, 0, 22),
+    )
+
+    image.alpha_composite(milo, (mx, my))
 
     footer_font = ImageFont.truetype(str(font_path), size=38)
     footer_word = "SARCATSTIC"
@@ -151,29 +176,18 @@ def overlay_brand(art_path, post, output_path):
     draw_paw(draw, fx + footer_width + 19, fy + 23, scale=1.15)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    image.save(output_path, "PNG", optimize=True)
+    image.convert("RGB").save(output_path, "PNG", optimize=True)
+    print(f"Using Milo asset: {asset.name}")
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--day", type=int, required=True)
-    parser.add_argument("--reuse-art", default="")
-    parser.add_argument("--art-only", action="store_true")
     args = parser.parse_args()
 
     post = load_post(args.day)
-    out_dir = ROOT / "outputs"
-    art_path = Path(args.reuse_art) if args.reuse_art else out_dir / f"day_{args.day:02d}_art.png"
-    final_path = out_dir / f"day_{args.day:02d}.png"
-
-    if not args.reuse_art:
-        generate_art(post, art_path)
-
-    if args.art_only:
-        print(art_path)
-        return
-
-    overlay_brand(art_path, post, final_path)
-    print(final_path)
+    output_path = ROOT / "outputs" / f"day_{args.day:02d}.png"
+    build_post(post, args.day, output_path)
+    print(output_path)
 
 if __name__ == "__main__":
     main()
