@@ -6,7 +6,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from brand import CANVAS, FOOTER_COLOR, QUOTE_COLOR
+from brand import BACKGROUND_COLORS, CANVAS, FOOTER_COLOR, QUOTE_COLOR
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_FILE = ROOT / "content" / "month_01.json"
@@ -16,13 +16,6 @@ FONT_URL = os.getenv(
     "PATRICK_HAND_FONT_URL",
     "https://raw.githubusercontent.com/google/fonts/main/ofl/patrickhand/PatrickHand-Regular.ttf",
 )
-
-BACKGROUND_COLORS = {
-    "warm_cream": (249, 244, 232),
-    "dusty_sage": (220, 227, 213),
-    "muted_blue": (218, 228, 237),
-    "soft_blush": (247, 226, 220),
-}
 
 CATEGORY_ALIASES = {
     # Work family
@@ -110,7 +103,6 @@ def resolve_assigned_illustration(assigned):
     if direct.exists() and direct.is_file() and direct.suffix.lower() == ".png":
         return direct
 
-    # Allow content rows to specify just the filename.
     matches = [
         path for path in MILO_LIBRARY.rglob(Path(assigned).name)
         if path.is_file() and path.suffix.lower() == ".png"
@@ -130,12 +122,10 @@ def resolve_assigned_illustration(assigned):
 
 
 def select_milo_asset(post, day):
-    # Best case: Month 1 explicitly maps the quote to the exact Milo pose.
     assigned = str(post.get("illustration", "")).strip()
     if assigned:
         return resolve_assigned_illustration(assigned)
 
-    # Otherwise choose from the correct visual family.
     category_hint = (
         post.get("illustration_category")
         or post.get("category")
@@ -145,7 +135,6 @@ def select_milo_asset(post, day):
     category = normalize_category(category_hint)
     files = approved_milo_files(category)
 
-    # If a category folder is unexpectedly empty, use general before using the whole library.
     if not files and category != "general":
         files = approved_milo_files("general")
 
@@ -158,7 +147,6 @@ def select_milo_asset(post, day):
             "Upload at least one transparent Milo cutout."
         )
 
-    # Deterministic rotation: the same campaign day always selects the same fallback image.
     return files[(day - 1) % len(files)]
 
 
