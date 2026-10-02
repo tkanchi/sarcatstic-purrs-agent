@@ -3,6 +3,16 @@ FOOTER_TEXT = "SARCATSTIC 🐾"
 QUOTE_COLOR = (0, 0, 0)
 FOOTER_COLOR = (0, 0, 0)
 
+# Locked quote typography/layout based on the approved reference image.
+QUOTE_FONT_NAME = "Patrick Hand Regular"
+QUOTE_TOP = 135
+QUOTE_MAX_WIDTH = 760
+QUOTE_MAX_HEIGHT = 330
+QUOTE_FONT_MAX = 70
+QUOTE_FONT_MIN = 50
+QUOTE_LINE_SPACING = 12
+QUOTE_ALIGNMENT = "center"
+
 # Locked SARCATSTIC PURRS background palette.
 BACKGROUND_COLORS = {
     "warm_cream": (247, 241, 232),   # #F7F1E8
