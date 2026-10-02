@@ -6,7 +6,18 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from brand import (\n    BACKGROUND_COLORS, CANVAS, FOOTER_COLOR, QUOTE_COLOR,\n    QUOTE_FONT_MAX, QUOTE_FONT_MIN, QUOTE_LINE_SPACING,\n    QUOTE_MAX_HEIGHT, QUOTE_MAX_WIDTH, QUOTE_TOP,\n)
+from brand import (
+    BACKGROUND_COLORS,
+    CANVAS,
+    FOOTER_COLOR,
+    QUOTE_COLOR,
+    QUOTE_FONT_MAX,
+    QUOTE_FONT_MIN,
+    QUOTE_LINE_SPACING,
+    QUOTE_MAX_HEIGHT,
+    QUOTE_MAX_WIDTH,
+    QUOTE_TOP,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_FILE = ROOT / "content" / "month_01.json"
