@@ -4,13 +4,12 @@ QUOTE_COLOR = (0, 0, 0)
 FOOTER_COLOR = (0, 0, 0)
 
 # Footer brand rules lock the text/color/placement/weight/style, but not an exact
-# typeface or pixel size yet. These are renderer defaults for previewing only.
+# typeface or pixel size yet. Preview rendering is matched proportionally to the
+# approved visual reference instead of treating a particular px size as a brand rule.
 FOOTER_RENDER_FONT_NAME = "Montserrat Regular"
-FOOTER_RENDER_FONT_SIZE = 24
-FOOTER_TRACKING = 6
-FOOTER_PAW_GAP = 13
-FOOTER_BOTTOM_MARGIN = 42
-FOOTER_PAW_SCALE = 0.95
+FOOTER_RENDER_TOTAL_WIDTH_RATIO = 0.273
+FOOTER_RENDER_BOTTOM_MARGIN_RATIO = 0.036
+FOOTER_RENDER_TRACKING_RATIO = 0.18
 
 # Locked quote typography/layout based on the approved reference image.
 QUOTE_FONT_NAME = "Patrick Hand Regular"
