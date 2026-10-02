@@ -3,9 +3,10 @@ FOOTER_TEXT = "SARCATSTIC 🐾"
 QUOTE_COLOR = (0, 0, 0)
 FOOTER_COLOR = (0, 0, 0)
 
-# Locked footer treatment.
-FOOTER_FONT_NAME = "Montserrat Regular"
-FOOTER_FONT_SIZE = 24
+# Footer brand rules lock the text/color/placement/weight/style, but not an exact
+# typeface or pixel size yet. These are renderer defaults for previewing only.
+FOOTER_RENDER_FONT_NAME = "Montserrat Regular"
+FOOTER_RENDER_FONT_SIZE = 24
 FOOTER_TRACKING = 6
 FOOTER_PAW_GAP = 13
 FOOTER_BOTTOM_MARGIN = 42
