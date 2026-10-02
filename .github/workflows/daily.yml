@@ -1,0 +1,132 @@
+name: Daily SARCATSTIC PURRS Post
+
+on:
+  schedule:
+    # 11:15 UTC = 4:45 PM IST. Workflow waits until 5:00 PM IST.
+    - cron: "15 11 * * *"
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "Campaign day (1-30); blank = infer from India date"
+        required: false
+        type: string
+      publish:
+        description: "Actually publish to Instagram"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    if: github.event_name != 'schedule' || vars.AUTO_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+      META_API_VERSION: v26.0
+      OPENAI_IMAGE_MODEL: gpt-image-2.5-sunburst
+      OPENAI_IMAGE_QUALITY: medium
+      DAY_NUMBER: ${{ inputs.day }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate Month 1 bank and brand rules
+        run: PYTHONPATH=src python src/validate_content.py
+
+      - name: Resolve campaign day
+        id: campaign
+        shell: bash
+        run: |
+          DAY=$(PYTHONPATH=src python src/campaign_day.py)
+          echo "day=$DAY" >> "$GITHUB_OUTPUT"
+          echo "Resolved campaign day: $DAY"
+
+      - name: Stop outside campaign window
+        if: steps.campaign.outputs.day == '0'
+        run: echo "No scheduled SARCATSTIC PURRS post today."
+
+      - name: Generate Milo illustration and branded post
+        if: steps.campaign.outputs.day != '0'
+        run: PYTHONPATH=src python src/generate_post.py --day "${{ steps.campaign.outputs.day }}"
+
+      - name: Build caption
+        if: steps.campaign.outputs.day != '0'
+        run: PYTHONPATH=src python src/build_caption.py --day "${{ steps.campaign.outputs.day }}"
+
+      - name: Upload preview artifact
+        if: steps.campaign.outputs.day != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sarcatstic-day-${{ steps.campaign.outputs.day }}
+          path: |
+            outputs/day_*.png
+            outputs/caption.txt
+
+      - name: Copy final image to public hosting path
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        shell: bash
+        env:
+          DAY: ${{ steps.campaign.outputs.day }}
+        run: |
+          DATE=$(python - <<'PY'
+          import json, os
+          rows = json.load(open("content/month_01.json", encoding="utf-8"))
+          day = int(os.environ["DAY"])
+          print(next(row["date"] for row in rows if row["day"] == day))
+          PY
+          )
+          mkdir -p public
+          cp "outputs/day_$(printf '%02d' "$DAY").png" "public/${DATE}.png"
+
+      - name: Commit public image
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        shell: bash
+        run: |
+          git config user.name "sarcatstic-purrs-agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/
+          git diff --cached --quiet || git commit -m "Publish asset for campaign day ${{ steps.campaign.outputs.day }}"
+          git push
+
+      - name: Wait until 5 PM IST
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        run: python src/wait_until_ist.py 17:00
+
+      - name: Publish to Instagram
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        shell: bash
+        env:
+          DAY: ${{ steps.campaign.outputs.day }}
+          CAPTION_FILE: outputs/caption.txt
+          RESULT_FILE: published_logs/day_${{ steps.campaign.outputs.day }}.json
+        run: |
+          DATE=$(python - <<'PY'
+          import json, os
+          rows = json.load(open("content/month_01.json", encoding="utf-8"))
+          day = int(os.environ["DAY"])
+          print(next(row["date"] for row in rows if row["day"] == day))
+          PY
+          )
+          export IMAGE_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/${DATE}.png"
+          python src/publish_instagram.py
+
+      - name: Commit publish log
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        shell: bash
+        run: |
+          git add published_logs/
+          git diff --cached --quiet || git commit -m "Log Instagram publish for day ${{ steps.campaign.outputs.day }}"
+          git push
