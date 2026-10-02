@@ -1,0 +1,302 @@
+[
+  {
+    "day": 1,
+    "date": "2026-10-03",
+    "quote": "I had plans. Then I remembered I have a sofa.",
+    "pillar": "everyday",
+    "background": "warm_cream",
+    "expression": "sleepy smug",
+    "prop": "one small cushion",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 2,
+    "date": "2026-10-04",
+    "quote": "My social battery came pre-drained.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "deadpan side-eye",
+    "prop": "tiny phone face-down",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 3,
+    "date": "2026-10-05",
+    "quote": "I’m not avoiding work. I’m letting it miss me.",
+    "pillar": "work",
+    "background": "muted_blue",
+    "expression": "calmly unimpressed",
+    "prop": "small closed laptop",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 4,
+    "date": "2026-10-06",
+    "quote": "I replied in my head. That should count.",
+    "pillar": "social",
+    "background": "soft_blush",
+    "expression": "innocent side-eye",
+    "prop": "tiny phone",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 5,
+    "date": "2026-10-07",
+    "quote": "I need a weekend from my weekend.",
+    "pillar": "adulting",
+    "background": "warm_cream",
+    "expression": "fully exhausted",
+    "prop": "small blanket edge",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 6,
+    "date": "2026-10-08",
+    "quote": "My patience is on airplane mode.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "flat stare",
+    "prop": "tiny airplane-mode icon card",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 7,
+    "date": "2026-10-09",
+    "quote": "I love plans. Especially cancelled ones.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "pleased smug",
+    "prop": "tiny crossed-out calendar",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 8,
+    "date": "2026-10-10",
+    "quote": "I’m multitasking: tired and annoyed.",
+    "pillar": "mood",
+    "background": "warm_cream",
+    "expression": "tired side-eye",
+    "prop": "small coffee mug",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 9,
+    "date": "2026-10-11",
+    "quote": "I have enough tabs open. Emotionally too.",
+    "pillar": "overthinking",
+    "background": "muted_blue",
+    "expression": "overloaded blank stare",
+    "prop": "tiny laptop with simple tabs",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 10,
+    "date": "2026-10-12",
+    "quote": "I’m listening. My face just filed an objection.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "strong sarcastic side-eye",
+    "prop": "none",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 11,
+    "date": "2026-10-13",
+    "quote": "My ambition is currently under a blanket.",
+    "pillar": "productivity",
+    "background": "warm_cream",
+    "expression": "sleepy content",
+    "prop": "small blanket",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 12,
+    "date": "2026-10-14",
+    "quote": "I don’t need closure. I need snacks.",
+    "pillar": "relationships",
+    "background": "soft_blush",
+    "expression": "matter-of-fact smug",
+    "prop": "tiny snack bowl",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 13,
+    "date": "2026-10-15",
+    "quote": "I’m not late. Time started without me.",
+    "pillar": "adulting",
+    "background": "muted_blue",
+    "expression": "unbothered",
+    "prop": "tiny clock",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 14,
+    "date": "2026-10-16",
+    "quote": "Today’s agenda: lower expectations.",
+    "pillar": "work",
+    "background": "muted_blue",
+    "expression": "calm deadpan",
+    "prop": "tiny notepad",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 15,
+    "date": "2026-10-17",
+    "quote": "I could explain, but I’m conserving energy.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "weary side-eye",
+    "prop": "none",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 16,
+    "date": "2026-10-18",
+    "quote": "My inbox and I are no longer speaking.",
+    "pillar": "work",
+    "background": "muted_blue",
+    "expression": "offended deadpan",
+    "prop": "tiny closed laptop",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 17,
+    "date": "2026-10-19",
+    "quote": "I’m available. Emotionally? Absolutely not.",
+    "pillar": "relationships",
+    "background": "soft_blush",
+    "expression": "polite but distant",
+    "prop": "tiny phone",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 18,
+    "date": "2026-10-20",
+    "quote": "I’m calm. That’s just my eye twitching.",
+    "pillar": "mood",
+    "background": "dusty_sage",
+    "expression": "strained calm side-eye",
+    "prop": "none",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 19,
+    "date": "2026-10-21",
+    "quote": "I said ‘no worries.’ There were worries.",
+    "pillar": "overthinking",
+    "background": "soft_blush",
+    "expression": "quietly concerned",
+    "prop": "tiny thought cloud",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 20,
+    "date": "2026-10-22",
+    "quote": "I need fewer meetings and more cancelled invites.",
+    "pillar": "work",
+    "background": "muted_blue",
+    "expression": "hopeful deadpan",
+    "prop": "tiny crossed-out calendar",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 21,
+    "date": "2026-10-23",
+    "quote": "I’m not overthinking. I’m overproducing scenarios.",
+    "pillar": "overthinking",
+    "background": "dusty_sage",
+    "expression": "wide-eyed annoyed",
+    "prop": "two tiny thought bubbles",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 22,
+    "date": "2026-10-24",
+    "quote": "I came for peace. People were already there.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "deeply unimpressed",
+    "prop": "two tiny distant silhouettes",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 23,
+    "date": "2026-10-25",
+    "quote": "My motivation saw the workload and left.",
+    "pillar": "productivity",
+    "background": "muted_blue",
+    "expression": "resigned",
+    "prop": "small to-do sheet",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 24,
+    "date": "2026-10-26",
+    "quote": "I’m very organized. My chaos has categories.",
+    "pillar": "adulting",
+    "background": "warm_cream",
+    "expression": "proud smug",
+    "prop": "two neat little folders",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 25,
+    "date": "2026-10-27",
+    "quote": "I’m protecting my peace from basic conversation.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "serene side-eye",
+    "prop": "none",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 26,
+    "date": "2026-10-28",
+    "quote": "I support your decision to stop asking me.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "approving deadpan",
+    "prop": "none",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 27,
+    "date": "2026-10-29",
+    "quote": "I’m trying to care. The app keeps crashing.",
+    "pillar": "mood",
+    "background": "muted_blue",
+    "expression": "blank stare",
+    "prop": "tiny loading icon card",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 28,
+    "date": "2026-10-30",
+    "quote": "Nothing personal. I’m tired of everyone equally.",
+    "pillar": "social",
+    "background": "dusty_sage",
+    "expression": "exhausted side-eye",
+    "prop": "none",
+    "quote_position": "upper_left"
+  },
+  {
+    "day": 29,
+    "date": "2026-10-31",
+    "quote": "I’m not dramatic. I simply have excellent reactions.",
+    "pillar": "relationships",
+    "background": "soft_blush",
+    "expression": "mildly offended",
+    "prop": "none",
+    "quote_position": "upper_center"
+  },
+  {
+    "day": 30,
+    "date": "2026-11-01",
+    "quote": "Survived another day of being professionally available.",
+    "pillar": "work",
+    "background": "muted_blue",
+    "expression": "softly relieved",
+    "prop": "tiny closed laptop",
+    "quote_position": "upper_left"
+  }
+]
