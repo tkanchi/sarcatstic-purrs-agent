@@ -1,7 +1,7 @@
 # SARCATSTIC PURRS — Locked Brand Contract
 
 ## Post formula
-**One short relatable quote + Milo + exact footer**
+**One short relatable quote + Milo + Instagram handle footer**
 
 ## Milo
 Primary source of truth: `assets/milo_collage.jpg`  
@@ -25,20 +25,17 @@ The approved quote-layout reference controls **font style, size, color and place
   - line spacing: 12 px
 
 ## Footer — locked
-Exact signature: **SARCATSTIC 🐾**
+Exact footer: **@sarcatsticmilo**
 
+- Font: **Patrick Hand Regular**
 - Color: **black**
 - Position: **bottom center**
 - Weight: **regular only — never bold**
-- Style: **small, understated, visually secondary**
-- Spacing: generous breathing room from Milo and the main quote
+- Style: small, clean and visually secondary
+- No paw icon
 - No tagline
-- No @handle
 - No extra lines
-- No decorative text
 - The quote and Milo must always dominate
-- **Exact footer font is not yet locked**
-- **Exact numeric footer size is not yet locked**
 
 ## Background families — exact locked palette
 - **A — Warm Cream: #F7F1E8**
@@ -59,9 +56,10 @@ Exact signature: **SARCATSTIC 🐾**
 - Warm Cream is the default so the other three colors feel intentional when used
 
 ## Composition
-- branded master artwork: 4:5
+- master artwork: **9:16 — 1080×1920**
 - quote centered in upper third
-- Milo lower half
+- Milo centered in the lower-middle area
+- footer handle below Milo, safely above the bottom UI area
 - maximum 1–2 supporting objects
 - quiet, minimal, non-distracting background
 - no AI-generated text inside the illustration layer
@@ -69,5 +67,5 @@ Exact signature: **SARCATSTIC 🐾**
 ## Reel output
 - final publish format: 9:16 MP4
 - 8 seconds
-- branded 4:5 artwork preserved within the Reel canvas
+- artwork is generated natively at **1080×1920 (9:16)**; no 4:5 inset/letterboxing
 - music embedded before Instagram upload
