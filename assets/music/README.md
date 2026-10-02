@@ -1,31 +1,16 @@
-# SARCATSTIC PURRS Music Library
+# SARCATSTIC PURRS Music
 
-The daily campaign publishes Instagram **Reels**, so music is embedded into the MP4 before upload.
+No manual music upload is required for normal production.
 
-Upload only audio you are legally allowed to use and, because this repository is public, only files whose license permits the way you store/use them here.
+The Reel builder reuses the same rights-cleared remote-audio pattern as the user's `talksnwalks-agent`:
 
-Supported formats:
-- .mp3
-- .wav
-- .m4a
-- .aac
+1. read `data/rights_cleared_audio.csv`
+2. choose a suitable track for the day's joke category
+3. rotate tracks to reduce repetition
+4. download the selected rights-cleared track during the GitHub Actions run
+5. embed it into the 8-second MP4 with FFmpeg
+6. record track/source/license metadata in `outputs/day_XX_music.json`
 
-Recommended naming:
-- music_general_01.mp3
-- music_general_02.mp3
-- music_work_01.mp3
-- music_money_01.mp3
-- music_relationship_01.mp3
-- music_family_01.mp3
-- music_driving_01.mp3
+`assets/music/` is now optional and exists only for a future approved local override/fallback.
 
-The automation prefers music matching the quote category and falls back to `music_general_*`.
-
-Reel audio treatment:
-- 8-second Reel
-- music loops/trims automatically
-- gentle fade in/out
-- music level: 20%
-- AAC, 48 kHz, 128 kbps in the final MP4
-
-Do not upload copyrighted commercial songs unless you hold the necessary rights.
+Do not place copyrighted commercial tracks here unless the required rights have been secured.
