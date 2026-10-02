@@ -7,7 +7,7 @@ FOOTER_COLOR = (0, 0, 0)
 # Footer now uses the Instagram handle directly so it remains clear and readable.
 FOOTER_FONT_NAME = "Patrick Hand Regular"
 FOOTER_FONT_SIZE = 42
-FOOTER_Y = 1615
+FOOTER_Y = 1545
 
 # Locked quote typography/layout for the 1080x1920 master.
 QUOTE_FONT_NAME = "Patrick Hand Regular"
