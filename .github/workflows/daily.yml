@@ -80,6 +80,7 @@ jobs:
           path: |
             outputs/day_*.png
             outputs/day_*.mp4
+            outputs/day_*_music.json
             outputs/caption.txt
 
       - name: Copy Reel to public hosting path
