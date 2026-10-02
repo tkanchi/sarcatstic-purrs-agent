@@ -3,11 +3,26 @@ FOOTER_TEXT = "SARCATSTIC 🐾"
 QUOTE_COLOR = (0, 0, 0)
 FOOTER_COLOR = (0, 0, 0)
 
+# Locked SARCATSTIC PURRS background palette.
+BACKGROUND_COLORS = {
+    "warm_cream": (247, 241, 232),   # #F7F1E8
+    "dusty_sage": (201, 210, 192),   # #C9D2C0
+    "muted_blue": (189, 214, 231),   # #BDD6E7
+    "soft_blush": (243, 206, 197),   # #F3CEC5
+}
+
+BACKGROUND_HEX = {
+    "warm_cream": "#F7F1E8",
+    "dusty_sage": "#C9D2C0",
+    "muted_blue": "#BDD6E7",
+    "soft_blush": "#F3CEC5",
+}
+
 BACKGROUND_LABELS = {
-    "warm_cream": "warm cream / soft ivory",
-    "dusty_sage": "dusty sage",
-    "muted_blue": "muted blue",
-    "soft_blush": "soft blush / peach",
+    "warm_cream": "Warm Cream — #F7F1E8 — default / general Milo sarcasm",
+    "dusty_sage": "Dusty Sage — #C9D2C0 — dry humor, lazy moods, deadpan jokes",
+    "muted_blue": "Muted Blue — #BDD6E7 — work, people, social-life sarcasm",
+    "soft_blush": "Soft Blush / Peach — #F3CEC5 — relationships, dating, softer personal jokes",
 }
 
 MILO_TRAITS = (
