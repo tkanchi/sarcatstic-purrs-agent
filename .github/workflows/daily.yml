@@ -1,4 +1,4 @@
-name: Daily SARCATSTIC PURRS Post
+name: Daily SARCATSTIC PURRS Reel
 
 on:
   schedule:
@@ -37,7 +37,12 @@ jobs:
           python-version: "3.12"
           cache: "pip"
 
-      - name: Install dependencies
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
         run: pip install -r requirements.txt
 
       - name: Validate Month 1 bank and brand rules
@@ -53,11 +58,15 @@ jobs:
 
       - name: Stop outside campaign window
         if: steps.campaign.outputs.day == '0'
-        run: echo "No scheduled SARCATSTIC PURRS post today."
+        run: echo "No scheduled SARCATSTIC PURRS Reel today."
 
-      - name: Build branded post from approved Milo library
+      - name: Build branded Milo design
         if: steps.campaign.outputs.day != '0'
         run: PYTHONPATH=src python src/generate_post.py --day "${{ steps.campaign.outputs.day }}"
+
+      - name: Build 9:16 Reel with music
+        if: steps.campaign.outputs.day != '0'
+        run: PYTHONPATH=src python src/build_reel.py --day "${{ steps.campaign.outputs.day }}"
 
       - name: Build caption
         if: steps.campaign.outputs.day != '0'
@@ -67,12 +76,13 @@ jobs:
         if: steps.campaign.outputs.day != '0'
         uses: actions/upload-artifact@v4
         with:
-          name: sarcatstic-day-${{ steps.campaign.outputs.day }}
+          name: sarcatstic-reel-day-${{ steps.campaign.outputs.day }}
           path: |
             outputs/day_*.png
+            outputs/day_*.mp4
             outputs/caption.txt
 
-      - name: Copy final image to public hosting path
+      - name: Copy Reel to public hosting path
         if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         shell: bash
         env:
@@ -86,23 +96,23 @@ jobs:
           PY
           )
           mkdir -p public
-          cp "outputs/day_$(printf '%02d' "$DAY").png" "public/${DATE}.png"
+          cp "outputs/day_$(printf '%02d' "$DAY").mp4" "public/${DATE}.mp4"
 
-      - name: Commit public image
+      - name: Commit public Reel
         if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         shell: bash
         run: |
           git config user.name "sarcatstic-purrs-agent"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/
-          git diff --cached --quiet || git commit -m "Publish asset for campaign day ${{ steps.campaign.outputs.day }}"
+          git diff --cached --quiet || git commit -m "Publish Reel asset for campaign day ${{ steps.campaign.outputs.day }}"
           git push
 
       - name: Wait until 5 PM IST
         if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         run: python src/wait_until_ist.py 17:00
 
-      - name: Publish to Instagram
+      - name: Publish Reel to Instagram
         if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         shell: bash
         env:
@@ -117,7 +127,7 @@ jobs:
           print(next(row["date"] for row in rows if row["day"] == day))
           PY
           )
-          export IMAGE_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/${DATE}.png"
+          export VIDEO_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/${DATE}.mp4"
           python src/publish_instagram.py
 
       - name: Commit publish log
@@ -125,5 +135,5 @@ jobs:
         shell: bash
         run: |
           git add published_logs/
-          git diff --cached --quiet || git commit -m "Log Instagram publish for day ${{ steps.campaign.outputs.day }}"
+          git diff --cached --quiet || git commit -m "Log Instagram Reel publish for day ${{ steps.campaign.outputs.day }}"
           git push
