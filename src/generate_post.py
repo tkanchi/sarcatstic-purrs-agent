@@ -10,11 +10,9 @@ from brand import (
     BACKGROUND_COLORS,
     CANVAS,
     FOOTER_COLOR,
-    FOOTER_RENDER_FONT_SIZE,
-    FOOTER_TRACKING,
-    FOOTER_PAW_GAP,
-    FOOTER_BOTTOM_MARGIN,
-    FOOTER_PAW_SCALE,
+    FOOTER_RENDER_TOTAL_WIDTH_RATIO,
+    FOOTER_RENDER_BOTTOM_MARGIN_RATIO,
+    FOOTER_RENDER_TRACKING_RATIO,
     QUOTE_COLOR,
     QUOTE_FONT_MAX,
     QUOTE_FONT_MIN,
@@ -119,6 +117,28 @@ def draw_tracked_text(draw, x, y, text, font, fill, tracking):
     for char in text:
         draw.text((cursor, y), char, font=font, fill=fill)
         cursor += draw.textbbox((0, 0), char, font=font)[2] + tracking
+
+
+def fit_footer_preview(draw, font_path, text):
+    """Match the approved footer reference proportionally; no px size is brand-locked."""
+    target_total_width = CANVAS[0] * FOOTER_RENDER_TOTAL_WIDTH_RATIO
+    best = None
+
+    for size in range(18, 43):
+        font = ImageFont.truetype(str(font_path), size=size)
+        tracking = max(1, round(size * FOOTER_RENDER_TRACKING_RATIO))
+        text_width = tracked_text_width(draw, text, font, tracking)
+        paw_scale = max(0.8, size / 20)
+        paw_width = 20 * paw_scale
+        gap = max(6, round(size * 0.30))
+        total_width = text_width + gap + paw_width
+        delta = abs(total_width - target_total_width)
+        candidate = (delta, font, tracking, paw_scale, gap, text_width, paw_width)
+        if best is None or delta < best[0]:
+            best = candidate
+
+    _, font, tracking, paw_scale, gap, text_width, paw_width = best
+    return font, tracking, paw_scale, gap, text_width, paw_width
 
 
 def normalize_category(value):
@@ -300,18 +320,26 @@ def build_post(post, day, output_path):
 
     image.alpha_composite(milo, (mx, my))
 
-    # Locked footer: small, clean, understated "SARCATSTIC 🐾".
+    # Footer preview matched to the approved reference:
+    # small, clean, centered and visually secondary. Exact px size remains unlocked.
     footer_font_path = ensure_footer_font()
-    footer_font = ImageFont.truetype(str(footer_font_path), size=FOOTER_RENDER_FONT_SIZE)
     footer_word = "SARCATSTIC"
-    footer_width = tracked_text_width(draw, footer_word, footer_font, FOOTER_TRACKING)
-    paw_width = int(20 * FOOTER_PAW_SCALE)
-    total_width = footer_width + FOOTER_PAW_GAP + paw_width
+    (
+        footer_font,
+        footer_tracking,
+        paw_scale,
+        paw_gap,
+        footer_width,
+        paw_width,
+    ) = fit_footer_preview(draw, footer_font_path, footer_word)
+
+    total_width = footer_width + paw_gap + paw_width
     fx = (CANVAS[0] - total_width) // 2
 
     footer_box = draw.textbbox((0, 0), footer_word, font=footer_font)
     footer_height = footer_box[3] - footer_box[1]
-    fy = CANVAS[1] - FOOTER_BOTTOM_MARGIN - footer_height
+    bottom_margin = round(CANVAS[1] * FOOTER_RENDER_BOTTOM_MARGIN_RATIO)
+    fy = CANVAS[1] - bottom_margin - footer_height
 
     draw_tracked_text(
         draw,
@@ -320,11 +348,11 @@ def build_post(post, day, output_path):
         footer_word,
         footer_font,
         FOOTER_COLOR,
-        FOOTER_TRACKING,
+        footer_tracking,
     )
-    paw_x = fx + footer_width + FOOTER_PAW_GAP + paw_width // 2
-    paw_y = fy + footer_height // 2 + 4
-    draw_paw(draw, paw_x, paw_y, scale=FOOTER_PAW_SCALE)
+    paw_x = fx + footer_width + paw_gap + paw_width / 2
+    paw_y = fy + footer_height / 2 + max(2, round(footer_height * 0.12))
+    draw_paw(draw, paw_x, paw_y, scale=paw_scale)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     image.convert("RGB").save(output_path, "PNG", optimize=True)
