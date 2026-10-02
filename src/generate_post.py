@@ -10,6 +10,11 @@ from brand import (
     BACKGROUND_COLORS,
     CANVAS,
     FOOTER_COLOR,
+    FOOTER_FONT_SIZE,
+    FOOTER_TRACKING,
+    FOOTER_PAW_GAP,
+    FOOTER_BOTTOM_MARGIN,
+    FOOTER_PAW_SCALE,
     QUOTE_COLOR,
     QUOTE_FONT_MAX,
     QUOTE_FONT_MIN,
@@ -26,6 +31,11 @@ FONT_CACHE = ROOT / ".cache" / "PatrickHand-Regular.ttf"
 FONT_URL = os.getenv(
     "PATRICK_HAND_FONT_URL",
     "https://raw.githubusercontent.com/google/fonts/main/ofl/patrickhand/PatrickHand-Regular.ttf",
+)
+FOOTER_FONT_CACHE = ROOT / ".cache" / "Montserrat-Regular.ttf"
+FOOTER_FONT_URL = os.getenv(
+    "FOOTER_FONT_URL",
+    "https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat%5Bwght%5D.ttf",
 )
 
 CATEGORY_ALIASES = {
@@ -80,6 +90,35 @@ def ensure_font():
     if not FONT_CACHE.exists():
         urllib.request.urlretrieve(FONT_URL, FONT_CACHE)
     return FONT_CACHE
+
+
+def ensure_footer_font():
+    override = os.getenv("FOOTER_FONT_PATH", "").strip()
+    if override:
+        path = Path(override)
+        if not path.exists():
+            raise FileNotFoundError(path)
+        return path
+
+    FOOTER_FONT_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    if not FOOTER_FONT_CACHE.exists():
+        urllib.request.urlretrieve(FOOTER_FONT_URL, FOOTER_FONT_CACHE)
+    return FOOTER_FONT_CACHE
+
+
+def tracked_text_width(draw, text, font, tracking):
+    widths = [
+        draw.textbbox((0, 0), char, font=font)[2]
+        for char in text
+    ]
+    return sum(widths) + tracking * max(0, len(text) - 1)
+
+
+def draw_tracked_text(draw, x, y, text, font, fill, tracking):
+    cursor = x
+    for char in text:
+        draw.text((cursor, y), char, font=font, fill=fill)
+        cursor += draw.textbbox((0, 0), char, font=font)[2] + tracking
 
 
 def normalize_category(value):
@@ -261,15 +300,31 @@ def build_post(post, day, output_path):
 
     image.alpha_composite(milo, (mx, my))
 
-    footer_font = ImageFont.truetype(str(font_path), size=38)
+    # Locked footer: small, clean, understated "SARCATSTIC 🐾".
+    footer_font_path = ensure_footer_font()
+    footer_font = ImageFont.truetype(str(footer_font_path), size=FOOTER_FONT_SIZE)
     footer_word = "SARCATSTIC"
-    box = draw.textbbox((0, 0), footer_word, font=footer_font)
-    footer_width = box[2] - box[0]
-    total_width = footer_width + 34
+    footer_width = tracked_text_width(draw, footer_word, footer_font, FOOTER_TRACKING)
+    paw_width = int(20 * FOOTER_PAW_SCALE)
+    total_width = footer_width + FOOTER_PAW_GAP + paw_width
     fx = (CANVAS[0] - total_width) // 2
-    fy = CANVAS[1] - 78
-    draw.text((fx, fy), footer_word, font=footer_font, fill=FOOTER_COLOR)
-    draw_paw(draw, fx + footer_width + 19, fy + 23, scale=1.15)
+
+    footer_box = draw.textbbox((0, 0), footer_word, font=footer_font)
+    footer_height = footer_box[3] - footer_box[1]
+    fy = CANVAS[1] - FOOTER_BOTTOM_MARGIN - footer_height
+
+    draw_tracked_text(
+        draw,
+        fx,
+        fy,
+        footer_word,
+        footer_font,
+        FOOTER_COLOR,
+        FOOTER_TRACKING,
+    )
+    paw_x = fx + footer_width + FOOTER_PAW_GAP + paw_width // 2
+    paw_y = fy + footer_height // 2 + 4
+    draw_paw(draw, paw_x, paw_y, scale=FOOTER_PAW_SCALE)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     image.convert("RGB").save(output_path, "PNG", optimize=True)
