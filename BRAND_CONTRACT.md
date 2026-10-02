@@ -24,13 +24,20 @@ The approved quote-layout reference controls **font style, size, color and place
   - preferred font range: 50–70 px
   - line spacing: 12 px
 
-## Footer
+## Footer — locked
 Exact signature: **SARCATSTIC 🐾**
-- black
-- bottom center
-- no tagline
-- no extra line
-- no extra footer copy
+
+- Color: **black**
+- Position: **bottom center**
+- Weight: **regular only — never bold**
+- Style: **small, clean, understated**
+- Spacing: generous breathing room from Milo and the main quote
+- No tagline
+- No @handle
+- No extra lines
+- No decorative text
+- Footer must remain visually secondary; the quote and Milo always dominate
+- Quote font and footer font are separate systems: Patrick Hand is for the quote, not the footer
 
 ## Background families — exact locked palette
 - **A — Warm Cream: #F7F1E8**
