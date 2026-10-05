@@ -2,7 +2,9 @@ import json
 import os
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -90,6 +92,8 @@ def main():
     wait_until_ready(container_id)
     media_id = publish(container_id)
 
+    published_at_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
+
     RESULT_FILE.parent.mkdir(parents=True, exist_ok=True)
     RESULT_FILE.write_text(
         json.dumps(
@@ -99,6 +103,8 @@ def main():
                 "container_id": container_id,
                 "media_id": media_id,
                 "video_url": VIDEO_URL,
+                "published_at_ist": published_at_ist.isoformat(),
+                "published_date_ist": published_at_ist.date().isoformat(),
             },
             indent=2,
         ),
