@@ -58,9 +58,9 @@ jobs:
           echo "day=$DAY" >> "$GITHUB_OUTPUT"
           echo "Resolved campaign day: $DAY"
 
-      - name: Stop outside campaign window
+      - name: Stop when today's Reel is already published or bank is empty
         if: steps.campaign.outputs.day == '0'
-        run: echo "No scheduled SARCATSTIC PURRS Reel today."
+        run: echo "No publish needed: today's Reel already exists or the approved quote bank is empty."
 
       - name: Build branded Milo design
         if: steps.campaign.outputs.day != '0'
@@ -91,15 +91,9 @@ jobs:
         env:
           DAY: ${{ steps.campaign.outputs.day }}
         run: |
-          DATE=$(python - <<'PY'
-          import json, os
-          rows = json.load(open("content/month_01.json", encoding="utf-8"))
-          day = int(os.environ["DAY"])
-          print(next(row["date"] for row in rows if row["day"] == day))
-          PY
-          )
+          DAY_PADDED=$(printf '%02d' "$DAY")
           mkdir -p public
-          cp "outputs/day_$(printf '%02d' "$DAY").mp4" "public/${DATE}.mp4"
+          cp "outputs/day_${DAY_PADDED}.mp4" "public/day_${DAY_PADDED}.mp4"
 
       - name: Commit public Reel
         if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
@@ -123,14 +117,8 @@ jobs:
           CAPTION_FILE: outputs/caption.txt
           RESULT_FILE: published_logs/day_${{ steps.campaign.outputs.day }}.json
         run: |
-          DATE=$(python - <<'PY'
-          import json, os
-          rows = json.load(open("content/month_01.json", encoding="utf-8"))
-          day = int(os.environ["DAY"])
-          print(next(row["date"] for row in rows if row["day"] == day))
-          PY
-          )
-          export VIDEO_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/${DATE}.mp4"
+          DAY_PADDED=$(printf '%02d' "$DAY")
+          export VIDEO_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/day_${DAY_PADDED}.mp4"
           python src/publish_instagram.py
 
       - name: Commit publish log
