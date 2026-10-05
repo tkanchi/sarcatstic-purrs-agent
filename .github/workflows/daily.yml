@@ -21,7 +21,6 @@ permissions:
 
 jobs:
   build-and-publish:
-    if: github.event_name != 'schedule' || vars.AUTO_PUBLISH_ENABLED == 'true'
     runs-on: ubuntu-latest
     env:
       IG_USER_ID: ${{ secrets.IG_USER_ID }}
