@@ -2,8 +2,14 @@ name: Daily SARCATSTIC PURRS Reel
 
 on:
   schedule:
-    # 11:15 UTC = 4:45 PM IST. Workflow waits until 5:00 PM IST.
-    - cron: "15 11 * * *"
+    # 11:16 UTC = 4:46 PM IST. Workflow waits until 5:00 PM IST.
+    # Minute changed from 15 to 16 to force GitHub to reactivate the schedule.
+    - cron: "16 11 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/daily.yml"
   workflow_dispatch:
     inputs:
       day:
@@ -27,6 +33,7 @@ jobs:
       META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
       META_API_VERSION: v26.0
       DAY_NUMBER: ${{ inputs.day }}
+      SHOULD_PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[manual-publish]')) }}
 
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +93,7 @@ jobs:
             outputs/caption.txt
 
       - name: Copy Reel to public hosting path
-        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
         shell: bash
         env:
           DAY: ${{ steps.campaign.outputs.day }}
@@ -96,7 +103,7 @@ jobs:
           cp "outputs/day_${DAY_PADDED}.mp4" "public/day_${DAY_PADDED}.mp4"
 
       - name: Commit public Reel
-        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
         shell: bash
         run: |
           git config user.name "sarcatstic-purrs-agent"
@@ -110,7 +117,7 @@ jobs:
         run: python src/wait_until_ist.py 17:00
 
       - name: Publish Reel to Instagram
-        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
         shell: bash
         env:
           DAY: ${{ steps.campaign.outputs.day }}
@@ -122,7 +129,7 @@ jobs:
           python src/publish_instagram.py
 
       - name: Commit publish log
-        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
         shell: bash
         run: |
           git add published_logs/
