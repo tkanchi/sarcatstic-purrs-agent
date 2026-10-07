@@ -1,0 +1,79 @@
+name: SARCATSTIC PURRS One-Time Recovery
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/manual-recovery.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish-day-2:
+    runs-on: ubuntu-latest
+    env:
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+      META_API_VERSION: v26.0
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate content and code
+        run: |
+          python -m py_compile src/*.py
+          PYTHONPATH=src python src/validate_content.py
+
+      - name: Build Day 2 branded Milo design
+        run: PYTHONPATH=src python src/generate_post.py --day 2
+
+      - name: Build Day 2 Reel with music
+        run: PYTHONPATH=src python src/build_reel.py --day 2
+
+      - name: Build Day 2 caption
+        run: PYTHONPATH=src python src/build_caption.py --day 2
+
+      - name: Copy Reel to public hosting path
+        run: |
+          mkdir -p public
+          cp outputs/day_02.mp4 public/day_02.mp4
+
+      - name: Commit public Reel
+        run: |
+          git config user.name "sarcatstic-purrs-agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/day_02.mp4
+          git diff --cached --quiet || git commit -m "Publish Reel asset for campaign day 2"
+          git push
+
+      - name: Allow raw asset to propagate
+        run: sleep 10
+
+      - name: Publish Day 2 Reel to Instagram
+        env:
+          DAY: "2"
+          CAPTION_FILE: outputs/caption.txt
+          RESULT_FILE: published_logs/day_2.json
+          VIDEO_URL: https://raw.githubusercontent.com/tkanchi/sarcatstic-purrs-agent/main/public/day_02.mp4
+        run: python src/publish_instagram.py
+
+      - name: Commit Day 2 publish log
+        run: |
+          git add published_logs/day_2.json
+          git diff --cached --quiet || git commit -m "Log Instagram Reel publish for day 2"
+          git push
