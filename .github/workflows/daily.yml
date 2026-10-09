@@ -2,18 +2,14 @@ name: Daily SARCATSTIC PURRS Reel
 
 on:
   schedule:
-    # 11:16 UTC = 4:46 PM IST. Workflow waits until 5:00 PM IST.
-    # Minute changed from 15 to 16 to force GitHub to reactivate the schedule.
-    - cron: "16 11 * * *"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/daily.yml"
+    # Primary run: 11:15 UTC = 4:45 PM IST, then wait until 5:00 PM IST.
+    - cron: "15 11 * * *"
+    # Recovery run: 12:15 UTC = 5:45 PM IST. Daily dedupe prevents a second post.
+    - cron: "15 12 * * *"
   workflow_dispatch:
     inputs:
       day:
-        description: "Campaign day (1-30); blank = infer from India date"
+        description: "Campaign day (1-30); blank = next unpublished quote"
         required: false
         type: string
       publish:
@@ -33,7 +29,6 @@ jobs:
       META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
       META_API_VERSION: v26.0
       DAY_NUMBER: ${{ inputs.day }}
-      SHOULD_PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[manual-publish]')) }}
 
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +52,7 @@ jobs:
       - name: Validate Month 1 bank and brand rules
         run: PYTHONPATH=src python src/validate_content.py
 
-      - name: Resolve campaign day
+      - name: Resolve next Reel
         id: campaign
         shell: bash
         run: |
@@ -65,9 +60,10 @@ jobs:
           echo "day=$DAY" >> "$GITHUB_OUTPUT"
           echo "Resolved campaign day: $DAY"
 
-      - name: Stop when today's Reel is already published or bank is empty
+      - name: Nothing to publish
         if: steps.campaign.outputs.day == '0'
-        run: echo "No publish needed: today's Reel already exists or the approved quote bank is empty."
+        run: |
+          echo "No publish needed. Today's Reel is already published or the approved quote bank is empty."
 
       - name: Build branded Milo design
         if: steps.campaign.outputs.day != '0'
@@ -93,7 +89,7 @@ jobs:
             outputs/caption.txt
 
       - name: Copy Reel to public hosting path
-        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         shell: bash
         env:
           DAY: ${{ steps.campaign.outputs.day }}
@@ -103,7 +99,7 @@ jobs:
           cp "outputs/day_${DAY_PADDED}.mp4" "public/day_${DAY_PADDED}.mp4"
 
       - name: Commit public Reel
-        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         shell: bash
         run: |
           git config user.name "sarcatstic-purrs-agent"
@@ -112,12 +108,16 @@ jobs:
           git diff --cached --quiet || git commit -m "Publish Reel asset for campaign day ${{ steps.campaign.outputs.day }}"
           git push
 
-      - name: Wait until 5 PM IST (scheduled runs only)
+      - name: Wait until 5 PM IST on primary scheduled run
         if: steps.campaign.outputs.day != '0' && github.event_name == 'schedule'
         run: python src/wait_until_ist.py 17:00
 
+      - name: Allow raw asset to propagate
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
+        run: sleep 10
+
       - name: Publish Reel to Instagram
-        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         shell: bash
         env:
           DAY: ${{ steps.campaign.outputs.day }}
@@ -129,7 +129,7 @@ jobs:
           python src/publish_instagram.py
 
       - name: Commit publish log
-        if: steps.campaign.outputs.day != '0' && env.SHOULD_PUBLISH == 'true'
+        if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
         shell: bash
         run: |
           git add published_logs/
