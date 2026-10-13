@@ -2,10 +2,9 @@ name: Daily SARCATSTIC PURRS Reel
 
 on:
   schedule:
-    # Primary run: 11:15 UTC = 4:45 PM IST, then wait until 5:00 PM IST.
-    - cron: "15 11 * * *"
-    # Recovery run: 12:15 UTC = 5:45 PM IST. Daily dedupe prevents a second post.
-    - cron: "15 12 * * *"
+    # GitHub scheduled jobs can be delayed. Check hourly; the campaign gate
+    # allows only the first eligible run at/after 5 PM IST to publish.
+    - cron: "35 * * * *"
   workflow_dispatch:
     inputs:
       day:
@@ -21,6 +20,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: sarcatstic-daily-publish
+  cancel-in-progress: false
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -29,41 +32,47 @@ jobs:
       META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
       META_API_VERSION: v26.0
       DAY_NUMBER: ${{ inputs.day }}
+      GITHUB_EVENT_NAME: ${{ github.event_name }}
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install FFmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-
-      - name: Check Python syntax
-        run: python -m py_compile src/*.py
-
-      - name: Validate Month 1 bank and brand rules
-        run: PYTHONPATH=src python src/validate_content.py
 
       - name: Resolve next Reel
         id: campaign
         shell: bash
         run: |
-          DAY=$(PYTHONPATH=src python src/campaign_day.py)
+          DAY=$(PYTHONPATH=src python3 src/campaign_day.py)
           echo "day=$DAY" >> "$GITHUB_OUTPUT"
           echo "Resolved campaign day: $DAY"
 
       - name: Nothing to publish
         if: steps.campaign.outputs.day == '0'
         run: |
-          echo "No publish needed. Today's Reel is already published or the approved quote bank is empty."
+          echo "No publish needed yet: before 5 PM IST, already published today, or quote bank empty."
+
+      - uses: actions/setup-python@v5
+        if: steps.campaign.outputs.day != '0'
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install FFmpeg
+        if: steps.campaign.outputs.day != '0'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        if: steps.campaign.outputs.day != '0'
+        run: pip install -r requirements.txt
+
+      - name: Check Python syntax
+        if: steps.campaign.outputs.day != '0'
+        run: python -m py_compile src/*.py
+
+      - name: Validate Month 1 bank and brand rules
+        if: steps.campaign.outputs.day != '0'
+        run: PYTHONPATH=src python src/validate_content.py
 
       - name: Build branded Milo design
         if: steps.campaign.outputs.day != '0'
@@ -106,11 +115,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/
           git diff --cached --quiet || git commit -m "Publish Reel asset for campaign day ${{ steps.campaign.outputs.day }}"
+          git pull --rebase
           git push
-
-      - name: Wait until 5 PM IST on primary scheduled run
-        if: steps.campaign.outputs.day != '0' && github.event_name == 'schedule'
-        run: python src/wait_until_ist.py 17:00
 
       - name: Allow raw asset to propagate
         if: steps.campaign.outputs.day != '0' && (github.event_name == 'schedule' || inputs.publish == true)
@@ -134,4 +140,5 @@ jobs:
         run: |
           git add published_logs/
           git diff --cached --quiet || git commit -m "Log Instagram Reel publish for day ${{ steps.campaign.outputs.day }}"
+          git pull --rebase
           git push
