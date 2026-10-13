@@ -10,6 +10,7 @@ PUBLISHED_LOGS = ROOT / "published_logs"
 
 rows = json.loads(CONTENT.read_text(encoding="utf-8"))
 override = os.getenv("DAY_NUMBER", "").strip()
+event_name = os.getenv("GITHUB_EVENT_NAME", "").strip()
 
 if override:
     # Manual runs may target any specific campaign day.
@@ -20,7 +21,14 @@ if override:
     raise SystemExit(0)
 
 # Scheduled mode: exactly one new Reel per India calendar day.
-today_ist = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
+# GitHub cron delivery can be delayed substantially, so the workflow checks hourly.
+# Only scheduled runs at/after 5 PM IST are eligible; manual runs are unaffected.
+now_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
+if event_name == "schedule" and now_ist.hour < 17:
+    print("0")
+    raise SystemExit(0)
+
+today_ist = now_ist.date().isoformat()
 published_days = set()
 published_today = False
 
