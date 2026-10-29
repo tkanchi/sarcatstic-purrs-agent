@@ -217,7 +217,7 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_02_protecting_snacks.png"
+    "illustration": "family/milo_family_08_watching_my_stuff.png"
   },
   {
     "day": 21,
@@ -228,7 +228,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_09_waiting_for_meeting_end.png"
+    "illustration": "work/milo_work_03_headset_meeting.png"
   },
   {
     "day": 22,
@@ -239,7 +239,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_03_backing_away.png"
+    "illustration": "relationship/milo_relationship_02_suspicious_sideeye.png"
   },
   {
     "day": 23,
@@ -250,7 +250,7 @@
     "music_category": "driving",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "driving/milo_driving_02_traffic_angry.png"
+    "illustration": "driving/milo_driving_09_proud_indicator_user.png"
   },
   {
     "day": 24,
@@ -261,7 +261,7 @@
     "music_category": "money",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "money/milo_money_01_empty_wallet.png"
+    "illustration": "money/milo_money_10_salary_goodbye.png"
   },
   {
     "day": 25,
@@ -272,7 +272,7 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_05_endless_talking.png"
+    "illustration": "family/milo_family_03_guarding_belongings.png"
   },
   {
     "day": 26,
@@ -283,7 +283,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_06_angry_typing.png"
+    "illustration": "work/milo_work_07_confused_laptop.png"
   },
   {
     "day": 27,
@@ -294,7 +294,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_10_hugging_pillow.png"
+    "illustration": "general/milo_general_03_eating_snacks.png"
   },
   {
     "day": 28,
@@ -305,7 +305,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_11_serious_office_milo.png"
+    "illustration": "work/milo_work_08_paperwork_overload.png"
   },
   {
     "day": 29,
@@ -316,7 +316,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_04_stop_talking.png"
+    "illustration": "relationship/milo_relationship_07_pretending_to_listen.png"
   },
   {
     "day": 30,
@@ -327,7 +327,7 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_06_accusing_paw.png"
+    "illustration": "family/milo_family_08_watching_my_stuff.png"
   },
   {
     "day": 31,
@@ -338,7 +338,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_03_headset_meeting.png"
+    "illustration": "work/milo_work_05_exhausted_laptop.png"
   },
   {
     "day": 32,
@@ -349,7 +349,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_02_suspicious_sideeye.png"
+    "illustration": "relationship/milo_relationship_01_nervous.png"
   },
   {
     "day": 33,
@@ -360,7 +360,7 @@
     "music_category": "driving",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "driving/milo_driving_09_proud_indicator_user.png"
+    "illustration": "driving/milo_driving_03_waiting_in_traffic.png"
   },
   {
     "day": 34,
@@ -371,7 +371,7 @@
     "music_category": "money",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "money/milo_money_10_salary_goodbye.png"
+    "illustration": "money/milo_money_03_money_disappearing.png"
   },
   {
     "day": 35,
@@ -382,7 +382,7 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_03_guarding_belongings.png"
+    "illustration": "family/milo_family_01_annoyed.png"
   },
   {
     "day": 36,
@@ -393,7 +393,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_07_confused_laptop.png"
+    "illustration": "work/milo_work_04_laptop_facepalm.png"
   },
   {
     "day": 37,
@@ -404,7 +404,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "general/milo_general_03_eating_snacks.png"
+    "illustration": "relationship/milo_relationship_05_surrender.png"
   },
   {
     "day": 38,
@@ -415,7 +415,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_08_paperwork_overload.png"
+    "illustration": "work/milo_work_10_manager_calling.png"
   },
   {
     "day": 39,
@@ -426,7 +426,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_07_pretending_to_listen.png"
+    "illustration": "relationship/milo_relationship_06_guilty.png"
   },
   {
     "day": 40,
@@ -448,7 +448,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_05_exhausted_laptop.png"
+    "illustration": "work/milo_work_03_headset_meeting.png"
   },
   {
     "day": 42,
@@ -459,7 +459,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_01_nervous.png"
+    "illustration": "relationship/milo_relationship_02_suspicious_sideeye.png"
   },
   {
     "day": 43,
@@ -470,7 +470,7 @@
     "music_category": "driving",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "driving/milo_driving_03_waiting_in_traffic.png"
+    "illustration": "driving/milo_driving_09_proud_indicator_user.png"
   },
   {
     "day": 44,
@@ -481,7 +481,7 @@
     "music_category": "money",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "money/milo_money_03_money_disappearing.png"
+    "illustration": "money/milo_money_10_salary_goodbye.png"
   },
   {
     "day": 45,
@@ -492,7 +492,7 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_01_annoyed.png"
+    "illustration": "family/milo_family_03_guarding_belongings.png"
   },
   {
     "day": 46,
@@ -503,7 +503,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_04_laptop_facepalm.png"
+    "illustration": "work/milo_work_07_confused_laptop.png"
   },
   {
     "day": 47,
@@ -514,7 +514,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_05_surrender.png"
+    "illustration": "general/milo_general_03_eating_snacks.png"
   },
   {
     "day": 48,
@@ -525,7 +525,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_10_manager_calling.png"
+    "illustration": "work/milo_work_08_paperwork_overload.png"
   },
   {
     "day": 49,
@@ -536,7 +536,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_06_guilty.png"
+    "illustration": "relationship/milo_relationship_07_pretending_to_listen.png"
   },
   {
     "day": 50,
@@ -547,7 +547,7 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_02_protecting_snacks.png"
+    "illustration": "family/milo_family_08_watching_my_stuff.png"
   },
   {
     "day": 51,
@@ -558,7 +558,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_09_waiting_for_meeting_end.png"
+    "illustration": "work/milo_work_05_exhausted_laptop.png"
   },
   {
     "day": 52,
@@ -569,7 +569,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_03_backing_away.png"
+    "illustration": "relationship/milo_relationship_01_nervous.png"
   },
   {
     "day": 53,
@@ -580,7 +580,7 @@
     "music_category": "driving",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "driving/milo_driving_02_traffic_angry.png"
+    "illustration": "driving/milo_driving_03_waiting_in_traffic.png"
   },
   {
     "day": 54,
@@ -591,7 +591,7 @@
     "music_category": "money",
     "background": "warm_cream",
     "quote_position": "upper_center",
-    "illustration": "money/milo_money_01_empty_wallet.png"
+    "illustration": "money/milo_money_03_money_disappearing.png"
   },
   {
     "day": 55,
@@ -602,7 +602,7 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_05_endless_talking.png"
+    "illustration": "family/milo_family_01_annoyed.png"
   },
   {
     "day": 56,
@@ -613,7 +613,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_06_angry_typing.png"
+    "illustration": "work/milo_work_04_laptop_facepalm.png"
   },
   {
     "day": 57,
@@ -624,7 +624,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_10_hugging_pillow.png"
+    "illustration": "relationship/milo_relationship_05_surrender.png"
   },
   {
     "day": 58,
@@ -635,7 +635,7 @@
     "music_category": "work",
     "background": "muted_blue",
     "quote_position": "upper_center",
-    "illustration": "work/milo_work_11_serious_office_milo.png"
+    "illustration": "work/milo_work_10_manager_calling.png"
   },
   {
     "day": 59,
@@ -646,7 +646,7 @@
     "music_category": "relationship",
     "background": "soft_blush",
     "quote_position": "upper_center",
-    "illustration": "relationship/milo_relationship_04_stop_talking.png"
+    "illustration": "relationship/milo_relationship_06_guilty.png"
   },
   {
     "day": 60,
@@ -657,6 +657,6 @@
     "music_category": "family",
     "background": "dusty_sage",
     "quote_position": "upper_center",
-    "illustration": "family/milo_family_06_accusing_paw.png"
+    "illustration": "family/milo_family_08_watching_my_stuff.png"
   }
 ]
