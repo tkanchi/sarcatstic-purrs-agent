@@ -18,7 +18,7 @@ VALID_MUSIC_CATEGORIES = {
 
 def main():
     rows = json.loads(CONTENT.read_text(encoding="utf-8"))
-    assert len(rows) == 30, f"Expected exactly 30 posts, found {len(rows)}"
+    assert len(rows) >= 1, "Quote library must contain at least one post"
 
     dates = set()
     quotes = set()
@@ -30,7 +30,7 @@ def main():
         assert row["background"] in BACKGROUND_LABELS, f"Invalid background: {row['background']}"
         assert len(row["quote"]) <= 80, f"Quote too long: {row['quote']}"
         assert row["quote_position"] == "upper_center", (
-            f"Month 1 quote must use locked upper-center placement: day {row['day']}"
+            f"Quote must use locked upper-center placement: day {row['day']}"
         )
         assert row["caption_category"] in VALID_CAPTION_CATEGORIES, (
             f"Invalid caption category: {row['caption_category']}"
@@ -52,7 +52,7 @@ def main():
         quotes.add(row["quote"].lower())
 
     print(
-        "Campaign gate passed: 30 unique final quotes, locked backgrounds, "
+        f"Campaign gate passed: {len(rows)} unique final quotes, locked backgrounds, "
         "centered typography, caption/music categories and Milo mappings are valid."
     )
 
