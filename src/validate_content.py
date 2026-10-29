@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from PIL import Image
+
 from brand import BACKGROUND_LABELS
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,6 +49,14 @@ def main():
         assert illustration.suffix.lower() == ".png", (
             f"Milo illustration must be PNG: {row['illustration']}"
         )
+        try:
+            with Image.open(illustration) as image:
+                image.verify()
+        except Exception as exc:
+            raise AssertionError(
+                f"Milo illustration is unreadable for day {row['day']}: "
+                f"{row['illustration']} ({exc})"
+            ) from exc
 
         dates.add(row["date"])
         quotes.add(row["quote"].lower())
